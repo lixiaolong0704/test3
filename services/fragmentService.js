@@ -1,5 +1,6 @@
 import Fragment from '../models/fragment';
 
+
 export default class fragmentService {
 
     addFragment(model) {
@@ -43,6 +44,23 @@ export default class fragmentService {
             Fragment.find({}).sort({create_time:-1}).exec((err, results) => {
                 r(results);
             })
+            // Fragment.find({}, (err, results) => {
+            //     r(results);
+            // })
+        })
+
+    }
+    getFragmentsOfPg(pgConfig){
+
+        return new Promise((r) => {
+            Fragment.paginate({}, pgConfig, function(err, result) {
+                // result.docs
+                // result.total
+                // result.limit - 10
+                // result.page - 3
+                // result.pages
+                r(result);
+            });
             // Fragment.find({}, (err, results) => {
             //     r(results);
             // })

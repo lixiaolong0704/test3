@@ -1,12 +1,14 @@
 import mongoose from '../mongo';
+var mongoosePaginate = require('mongoose-paginate');
 
-var Fragment = mongoose.model('fragment', {
-        name: String,
-        ref_link:String,
-        ref_content:String,
-        create_time:Date
-    }
-);
+var schema = new mongoose.Schema({
+    name: String,
+    ref_link:String,
+    ref_content:String,
+    create_time:Date
+})
+schema.plugin(mongoosePaginate);
+var Fragment = mongoose.model('fragment', schema);
 
 export default Fragment;
 // var kitty = new Cat({name: 'Zildjian'});
