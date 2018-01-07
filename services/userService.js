@@ -18,6 +18,19 @@ export default class userService {
 
     }
 
+    auth(ps){
+
+        return new Promise((r) => {
+            User.findOne(ps).exec((err, results) => {
+                r(results);
+            })
+            // Fragment.find({}, (err, results) => {
+            //     r(results);
+            // })
+        })
+
+    }
+
 
 
 }
