@@ -8,7 +8,7 @@ var wrap = require('co-express');
 
 
 var _fragmentService = new fragmentService();
-var _bookService =new bookService();
+var _bookService = new bookService();
 
 
 /* GET home page. */
@@ -17,23 +17,50 @@ router.get('/', wrap(function* (req, res, next) {
 
 }))
 
+router.post('/getRemarksByParagraphIds', wrap(function* (req, res, next) {
+    var rs = yield  _bookService.getRemarksByParagraphIds({
+        book_id: req.body.book_id,
+        paragraph_ids: req.body.paragraph_ids ? req.body.paragraph_ids.split(".") : null
+    });
+    res.json({
+        code: 1,
+        data: rs
+    });
+}));
+router.post('/getRemarksByPosOfParagraph', wrap(function* (req, res, next) {
+    var rs = yield  _bookService.getRemarksByPosOfParagraph({
+        book_id: req.body.book_id,
+        paragraph_id: req.body.paragraph_id,
+        start: req.body.start,
+        end: req.body.end
+    });
+    res.json({
+        code: 1,
+        data: rs
+    });
+}));
 
-router.post('/addRemark', wrap(function* (req, res, next) {
+router.post('/editRemark', wrap(function* (req, res, next) {
+
 
     let model = Mock.mock({
 
-        // _id: String,
         text: req.body.text,
         remark: req.body.remark,
         // selectionElemementsData?: any
         start: req.body.start,
         end: req.body.end,
-        type:"",
-        book_id:req.body.book_id,
-        paragraph_id:req.body.paragraph_id
+        type: "",
+        book_id: req.body.book_id,
+        paragraph_id: req.body.paragraph_id
 
     });
-    var _id = yield _bookService.addRemark(model);
+
+    if (req.body._id) {
+        model._id = req.body._id;
+    }
+
+    var _id = yield _bookService.editRemark(model);
 
     // var _id=1;
     if (_id) {
@@ -59,8 +86,8 @@ router.post('/addBook', wrap(function* (req, res, next) {
             title: "@title(5, 10)",
         }],
         "paragraphs|10": [{
-            en_content:"@paragraph()",
-            chapter_id:""
+            en_content: "@paragraph()",
+            chapter_id: ""
 
         }],
         uid: "",
