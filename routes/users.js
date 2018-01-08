@@ -12,21 +12,44 @@ router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
 
+const handleErrors = (res, errors, fields) => {
+    res.json({
+        code: -1,
+        data: errors
+    });
+}
 
+router.get('/signout', wrap(function* (req, res, next) {
+    if (req.session) {
+        // delete session object
+        req.session.destroy(function (err) {
+            if (err) {
+                return next(err);
+            } else {
+                // return res.redirect('/login');
+                res.json({
+                    code: 1,
+                    data: null
+                });
+            }
+        });
+    }
+}));
 
+router.get('/getUserInfo', wrap(function* (req, res, next) {
+    if (req.session) {
+        res.json({
+            code: 1,
+            data: req.session.userinfo
+        });
+    }
+}));
 
 
 router.post('/auth', function (req, res, next) {
 
 
-    const handleErrors = (errors, fields) => {
-        res.json({
-            code: -1,
-            data: errors
-        });
-    }
-
-    var body = Object.assign({},req.body);
+    var body = Object.assign({}, req.body);
     var descriptor = {
         username: {type: "string", required: true},
         password: {type: "string", required: true}
@@ -45,7 +68,13 @@ router.post('/auth', function (req, res, next) {
             "password"
         ]);
         // validation passed
-        var data= await _userService.auth(ps);
+        var data = await _userService.auth(ps);
+
+        req.session.userinfo = data;
+        req.session.views = 1;
+        // req.session.save(()=>{
+        //
+        // });
         res.json({
             code: 1,
             data: data
@@ -68,7 +97,7 @@ router.post('/addUser', function (req, res, next) {
         });
     }
 
-    var body = Object.assign({},req.body);
+    var body = Object.assign({}, req.body);
     var descriptor = {
         username: {type: "string", required: true},
         password: {type: "string", required: true}
@@ -77,10 +106,7 @@ router.post('/addUser', function (req, res, next) {
 
     validator.validate(body, async (errors, fields) => {
         if (errors) {
-            // validation failed, errors is an array of all errors
-            // fields is an object keyed by field name with an array of
-            // errors per field
-            return handleErrors(errors, fields);
+            return handleErrors(res, errors, fields);
         }
         var ps = filter(body, [
             "nickname",

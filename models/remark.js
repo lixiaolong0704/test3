@@ -14,7 +14,11 @@ var schema = new mongoose.Schema({
     type:String,
 
     book_id:String,
-    paragraph_id:String
+    paragraph_id:String,
+
+    uid:String,
+    create_time:Date,
+    last_update_time:Date
 
 
 

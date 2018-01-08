@@ -25,18 +25,18 @@ export default class bookService {
 
         return new Promise((resolver) => {
 
+            var _remark =null;
             const callback=function (err) {
                 if (err) {
                     console.log(err);
                 } else {
-
-                    resolver(model._id);
+                    resolver(_remark?_remark._id:model._id);
                 }
             }
             if(model._id){
                 Remark.update({_id:model._id},{$set:model},callback);
             }else{
-                var _remark = new Remark(model);
+                _remark = new Remark(model);
                 _remark.save(callback);
             }
             // _remark[?"update":"save"]();

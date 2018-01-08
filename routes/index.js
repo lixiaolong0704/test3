@@ -2,14 +2,20 @@ import fragmentService from './../services/fragmentService';
 import bookService from './../services/bookService';
 import Mock from 'mockjs';
 
+var filter = require('filter-object');
+var schema = require('async-validator');
 var express = require('express');
 var router = express.Router();
 var wrap = require('co-express');
-
-
 var _fragmentService = new fragmentService();
 var _bookService = new bookService();
-
+const handleErrors = (res, errors, fields) => {
+    res.json({
+        code: -1,
+        data: errors
+    });
+}
+import _ from 'lodash';
 
 /* GET home page. */
 router.get('/', wrap(function* (req, res, next) {
@@ -42,34 +48,48 @@ router.post('/getRemarksByPosOfParagraph', wrap(function* (req, res, next) {
 
 router.post('/editRemark', wrap(function* (req, res, next) {
 
+    var descriptor = {
+        text: {type: "string", required: true},
+        remark: {type: "string", required: true},
+        start: {type: "number", required: true},
+        end: {type: "number", required: true},
+        book_id: {type: "string", required: true},
+        paragraph_id: {type: "string", required: true}
+    }
 
-    let model = Mock.mock({
+    var body = Object.assign({}, req.body);
+    var validator = new schema(descriptor);
 
-        text: req.body.text,
-        remark: req.body.remark,
-        // selectionElemementsData?: any
-        start: req.body.start,
-        end: req.body.end,
-        type: "",
-        book_id: req.body.book_id,
-        paragraph_id: req.body.paragraph_id
+    validator.validate(body, async (errors, fields) => {
+        if (errors) {
+            return handleErrors(res, errors, fields);
+        }
+
+        let model = {
+            ...filter(body, _.keys(descriptor)), //get descriptor properties
+            type: "",
+            uid: req.session.userinfo._id,
+        };
+
+        if (req.body._id) { //update
+            model._id = req.body._id;
+            model.last_update_time = new Date()
+        } else {
+            model.create_time = new Date();
+        }
+
+        var _id = await _bookService.editRemark(model);
+        if (_id) {
+            res.json({
+                code: 1,
+                data: _id
+            });
+
+        }
 
     });
 
-    if (req.body._id) {
-        model._id = req.body._id;
-    }
 
-    var _id = yield _bookService.editRemark(model);
-
-    // var _id=1;
-    if (_id) {
-        res.json({
-            code: 1,
-            data: _id
-        });
-
-    }
 }));
 
 
@@ -90,7 +110,7 @@ router.post('/addBook', wrap(function* (req, res, next) {
             chapter_id: ""
 
         }],
-        uid: "",
+        uid: req.session.userinfo._id,
         create_time: new Date()
     });
     var _id = yield _bookService.addBook(model);
