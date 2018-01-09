@@ -103,5 +103,21 @@ export default class bookService {
 
     }
 
+    getBooksOfPg(pgConfig){
+
+        return new Promise((r) => {
+            Book.paginate({}, pgConfig, function(err, result) {
+                // result.docs
+                // result.total
+                // result.limit - 10
+                // result.page - 3
+                // result.pages
+                r(result);
+            });
+        })
+
+
+    }
+
 
 }

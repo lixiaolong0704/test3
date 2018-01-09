@@ -7,8 +7,7 @@ var schema = require('async-validator');
 var express = require('express');
 var router = express.Router();
 var wrap = require('co-express');
-var _fragmentService = new fragmentService();
-var _bookService = new bookService();
+
 const handleErrors = (res, errors, fields) => {
     res.json({
         code: -1,
@@ -93,45 +92,7 @@ router.post('/editRemark', wrap(function* (req, res, next) {
 }));
 
 
-router.post('/addBook', wrap(function* (req, res, next) {
 
-    let model = Mock.mock({
-        cn_name: "@cword(10)",//chinese name
-        en_name: "@word(5)",//english name
-        intro: "时间简史不错呀", //简介
-
-        // ref_link:String,
-        // ref_content:String,
-        "chapters|10": [{
-            title: "@title(5, 10)",
-        }],
-        "paragraphs|10": [{
-            en_content: "@paragraph()",
-            chapter_id: ""
-
-        }],
-        uid: req.session.userinfo._id,
-        create_time: new Date()
-    });
-    var _id = yield _bookService.addBook(model);
-    // console.log(model);
-    // var _id= 1;
-    if (_id) {
-        res.json({
-            code: 1,
-            data: _id
-        });
-
-    }
-}));
-router.get('/getBookById', wrap(function* (req, res, next) {
-    // var rs = yield  _fragmentService.getAllFragments();
-    var rs = yield  _bookService.getBookById();
-    res.json({
-        code: 1,
-        data: rs
-    });
-}));
 
 router.post('/addFragment', wrap(function* (req, res, next) {
 

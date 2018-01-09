@@ -6,10 +6,17 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+var getReply = function* (msg) {
+    //...
+    return 'abc';
+}
+
+var a = getReply();
+console.log(a);
+
 var session = require('express-session');
 import mongoose from './mongo';
+import init from './router';
 
 const MongoStore = require('connect-mongo')(session);
 
@@ -24,11 +31,15 @@ var app = express();
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
     secret: 'bbb cat',
-    // resave: false,
+    resave: false,
     saveUninitialized: false,
 
     //todo HTTPS if secure is true
-    cookie: {secure: false, maxAge: 60000},
+    cookie: {
+        secure: false,
+        // maxAge: 60000
+        maxAge:new Date(Date.now() + (6000000000))
+    },
     store: new MongoStore({
         mongooseConnection: mongoose.connection,
         autoRemove: 'interval',
@@ -57,16 +68,16 @@ app.use(function (req, res, next) {
     //
     // // get the url pathname
 
-    if(req.path.indexOf("users")>=0){
+    if (req.path.indexOf("user") >= 0) {
         next()
-    }else{
+    } else {
 
-        if(req.session.userinfo){
+        if (req.session.userinfo) {
             next();
-        }else{
+        } else {
             res.json({
                 code: -2,
-                data: "time out"
+                data: "time out" + req.session.cookie.maxAge
             });
         }
     }
@@ -96,10 +107,7 @@ app.use(sassMiddleware({
 app.use(express.static(path.join(__dirname, 'public')));
 var router = express.Router()
 
-
-
-app.use('/', index);
-app.use('/users', users);
+init(app);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
