@@ -1,6 +1,9 @@
 import Controller from '../Controller';
 import {controller, get, post} from '../mvc/helper';
 import bookService from '../services/bookService';
+var filter = require('filter-object');
+var schema = require('async-validator');
+import _ from 'lodash';
 var _bookService = new bookService();
 export default class remark extends Controller {
 
@@ -46,7 +49,7 @@ export default class remark extends Controller {
 
         validator.validate(body, async (errors, fields) => {
             if (errors) {
-                return handleErrors(res, errors, fields);
+                return this.handleErrors(res, errors, fields);
             }
 
             let model = {

@@ -2,6 +2,9 @@ import Controller from '../Controller';
 import bookService from '../services/bookService';
 import {controller, get, post} from '../mvc/helper';
 
+var schema = require('async-validator');
+import Mock from 'mockjs';
+
 var _bookService = new bookService();
 export default class book extends Controller {
     @post()
@@ -13,11 +16,11 @@ export default class book extends Controller {
 
             // ref_link:String,
             // ref_content:String,
-            "chapters|10": [{
+            "chapters|30": [{
                 title: "@title(5, 10)",
             }],
-            "paragraphs|10": [{
-                en_content: "@paragraph()",
+            "paragraphs|1000": [{
+                en_content: "@increment() @paragraph()",
                 chapter_id: ""
 
             }],
@@ -28,32 +31,47 @@ export default class book extends Controller {
         // console.log(model);
         // var _id= 1;
         if (_id) {
-            res.json({
-                code: 1,
-                data: _id
-            });
-
+            this.success(_id);
         }
     }
 
     @get()
-    async getBookById (req, res, next) {
+    async getBookById(req, res, next) {
         // var rs = yield  _fragmentService.getAllFragments();
         var rs = await  _bookService.getBookById();
-        res.json({
-            code: 1,
-            data: rs
+        this.success(rs);
+    }
+
+
+    paragraphBatchSize = 10
+
+    @get("/getBookMainInfoById/:batchNum")
+    async getBookMainInfoById(req, res, next) {
+        var rs = await  _bookService.getBookMainInfoById("5a5863be1381c8180ff12c3c");
+        var rs1 = await  _bookService.getBookParagraphsByIndex({
+            book_id: "5a5863be1381c8180ff12c3c",
+            start: (req.params.batchNum - 1) * this.paragraphBatchSize,
+            size: this.paragraphBatchSize
         });
+        this.success(Object.assign(rs, rs1));
+    }
+
+    @get("/getBookParagraphsByIndex/:batchNum")
+    async getBookParagraphsByIndex(req) {
+        var rs = await  _bookService.getBookParagraphsByIndex({
+            book_id: "5a5863be1381c8180ff12c3c",
+            start: (req.params.batchNum - 1) * this.paragraphBatchSize,
+            size: this.paragraphBatchSize
+
+        });
+        this.success(rs);
     }
 
 
     @get('/getBooksOfPg/:page')
-    async getFragmentsOfPg(req, res, next){
-        var rs = await  _bookService.getBooksOfPg({page: req.params.page, limit: 5});
-        res.json({
-            code: 1,
-            data: rs
-        });
+    async getFragmentsOfPg(req, res, next) {
+        var rs = await  _bookService.getBooksOfPg({}, {page: req.params.page, limit: 5});
+        this.success(rs);
     }
 
 

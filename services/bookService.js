@@ -25,17 +25,17 @@ export default class bookService {
 
         return new Promise((resolver) => {
 
-            var _remark =null;
-            const callback=function (err) {
+            var _remark = null;
+            const callback = function (err) {
                 if (err) {
                     console.log(err);
                 } else {
-                    resolver(_remark?_remark._id:model._id);
+                    resolver(_remark ? _remark._id : model._id);
                 }
             }
-            if(model._id){
-                Remark.update({_id:model._id},{$set:model},callback);
-            }else{
+            if (model._id) {
+                Remark.update({_id: model._id}, {$set: model}, callback);
+            } else {
                 _remark = new Remark(model);
                 _remark.save(callback);
             }
@@ -93,7 +93,7 @@ export default class bookService {
 
     getBookById() {
         return new Promise((r) => {
-            Book.findOne({}).exec((err, results) => {
+            Book.findOne({_id: '5a5854648a8b0710c327c1dc'}).exec((err, results) => {
                 r(results);
             })
             // Fragment.find({}, (err, results) => {
@@ -103,10 +103,60 @@ export default class bookService {
 
     }
 
-    getBooksOfPg(pgConfig){
+    getBookMainInfoById(book_id) {
+        return new Promise((r) => {
+            Book.findOne({_id: book_id}).select({
+                cn_name: 1,//chinese name
+                en_name: 1,//english name
+                intro: 1, //简介
+                // ref_link:String,
+                // ref_content:String,
+                chapters: [{
+                    title: 1,
+                }],
+                uid: 1,
+                create_time: 1
+            }).exec((err, results) => {
+
+                r(results);
+            })
+            // Fragment.find({}, (err, results) => {
+            //     r(results);
+            // })
+        })
+
+    }
+
+    getBookParagraphsByIndex({book_id, start, size}) {
 
         return new Promise((r) => {
-            Book.paginate({}, pgConfig, function(err, result) {
+            Book.findOne({_id: book_id}, {}).select({
+                chapters: 0,
+                paragraphs: {
+                    $slice: [start, size]
+                }
+            }).exec((err, results) => {
+
+                r(results);
+            })
+            // Fragment.find({}, (err, results) => {
+            //     r(results);
+            // })
+        })
+
+
+    }
+
+
+    getBooksOfPg(query,pgConfig) {
+
+        return new Promise((r) => {
+            Book.paginate(query, Object.assign({
+                select: {
+                    cn_name: 1,
+                    en_name: 1
+                }
+            }, pgConfig), function (err, result) {
                 // result.docs
                 // result.total
                 // result.limit - 10

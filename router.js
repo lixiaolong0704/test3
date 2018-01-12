@@ -35,7 +35,12 @@ export default function init(app) {
                 console.log(`support url /${_ctl.constructor.name}/${path}`)
                 //exec when has decorators--
                 //todo router第二个参数不能用lambda
-                router[ano.method](path, function () {
+                router[ano.method](path, function (req, res, next) {
+                    _ctl.context={
+                        req,
+                        res
+                    }
+
                     // console.log(arguments);
                     _ctl[name].apply(_ctl, arguments);
                 })
