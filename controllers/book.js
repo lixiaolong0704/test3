@@ -16,10 +16,10 @@ export default class book extends Controller {
 
             // ref_link:String,
             // ref_content:String,
-            "chapters|30": [{
+            "chapters|5": [{
                 title: "@title(5, 10)",
             }],
-            "paragraphs|1000": [{
+            "paragraphs|100": [{
                 en_content: "@increment() @paragraph()",
                 chapter_id: ""
 
@@ -45,21 +45,23 @@ export default class book extends Controller {
 
     paragraphBatchSize = 10
 
-    @get("/getBookMainInfoById/:batchNum")
+    @get("/getBookMainInfoById/:book_id/:batchNum")
     async getBookMainInfoById(req, res, next) {
-        var rs = await  _bookService.getBookMainInfoById("5a5863be1381c8180ff12c3c");
+        var rs = await  _bookService.getBookMainInfoById(req.params.book_id);
         var rs1 = await  _bookService.getBookParagraphsByIndex({
-            book_id: "5a5863be1381c8180ff12c3c",
+            // book_id: "5a5863be1381c8180ff12c3c",
+            book_id: req.params.book_id,
             start: (req.params.batchNum - 1) * this.paragraphBatchSize,
             size: this.paragraphBatchSize
         });
         this.success(Object.assign(rs, rs1));
     }
 
-    @get("/getBookParagraphsByIndex/:batchNum")
+    @get("/getBookParagraphsByIndex/:book_id/:batchNum")
     async getBookParagraphsByIndex(req) {
         var rs = await  _bookService.getBookParagraphsByIndex({
-            book_id: "5a5863be1381c8180ff12c3c",
+            // book_id: "5a5863be1381c8180ff12c3c",
+            book_id: req.params.book_id,
             start: (req.params.batchNum - 1) * this.paragraphBatchSize,
             size: this.paragraphBatchSize
 
@@ -70,7 +72,14 @@ export default class book extends Controller {
 
     @get('/getBooksOfPg/:page')
     async getFragmentsOfPg(req, res, next) {
-        var rs = await  _bookService.getBooksOfPg({}, {page: req.params.page, limit: 5});
+        var rs = await  _bookService.getBooksOfPg({}, {
+            page: req.params.page,
+            limit: 5,
+            sort:{
+                create_time:"desc"
+            }
+
+        });
         this.success(rs);
     }
 

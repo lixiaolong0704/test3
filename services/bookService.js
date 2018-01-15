@@ -154,7 +154,8 @@ export default class bookService {
             Book.paginate(query, Object.assign({
                 select: {
                     cn_name: 1,
-                    en_name: 1
+                    en_name: 1,
+                    create_time:1
                 }
             }, pgConfig), function (err, result) {
                 // result.docs
