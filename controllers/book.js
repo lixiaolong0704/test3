@@ -54,7 +54,8 @@ export default class book extends Controller {
             start: (req.params.batchNum - 1) * this.paragraphBatchSize,
             size: this.paragraphBatchSize
         });
-        this.success(Object.assign(rs, rs1));
+        var data = await _bookService.getParagraphSize(req.params.book_id);
+        this.success(Object.assign(rs.toObject({getters: true}), rs1.toObject({getters: true}), {psize: data.paragraphSize}));
     }
 
     @get("/getBookParagraphsByIndex/:book_id/:batchNum")
@@ -75,8 +76,8 @@ export default class book extends Controller {
         var rs = await  _bookService.getBooksOfPg({}, {
             page: req.params.page,
             limit: 5,
-            sort:{
-                create_time:"desc"
+            sort: {
+                create_time: "desc"
             }
 
         });

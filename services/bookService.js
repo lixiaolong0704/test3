@@ -2,6 +2,7 @@ import Book from '../models/book';
 import Remark from '../models/remark';
 import _ from 'lodash';
 
+const mongoose = require('mongoose');
 export default class bookService {
 
     addBook(model) {
@@ -124,8 +125,34 @@ export default class bookService {
             //     r(results);
             // })
         })
-
     }
+
+
+    getParagraphSize(book_id) {
+
+        return new Promise((r) => {
+            Book.aggregate(
+                [
+                    {
+                        $project: {
+                            _id: 1,
+                            paragraphSize: {$size: "$paragraphs"}
+                        }
+                    },
+                    {
+                        $match:
+                            {_id: mongoose.Types.ObjectId(book_id)}
+                    }
+                ], (err, results) => {
+
+                    r(results[0]);
+                });
+            // Fragment.find({}, (err, results) => {
+            //     r(results);
+            // })
+        })
+    }
+
 
     getBookParagraphsByIndex({book_id, start, size}) {
 
@@ -143,19 +170,17 @@ export default class bookService {
             //     r(results);
             // })
         })
-
-
     }
 
 
-    getBooksOfPg(query,pgConfig) {
+    getBooksOfPg(query, pgConfig) {
 
         return new Promise((r) => {
             Book.paginate(query, Object.assign({
                 select: {
                     cn_name: 1,
                     en_name: 1,
-                    create_time:1
+                    create_time: 1
                 }
             }, pgConfig), function (err, result) {
                 // result.docs

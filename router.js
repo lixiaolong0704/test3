@@ -9,6 +9,7 @@ var express = require('express');
 import userCtl from './controllers/user';
 import bookCtl from './controllers/book';
 import remarkCtl from './controllers/remark';
+import readlogCtl from './controllers/readlog';
 export default function init(app) {
 
 
@@ -61,6 +62,7 @@ export default function init(app) {
     setUp(userCtl);
     setUp(bookCtl);
     setUp(remarkCtl);
+    setUp(readlogCtl);
 
 
 
