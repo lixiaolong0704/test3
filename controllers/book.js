@@ -75,7 +75,7 @@ export default class book extends Controller {
     async getFragmentsOfPg(req, res, next) {
         var rs = await  _bookService.getBooksOfPg({}, {
             page: req.params.page,
-            limit: 5,
+            limit: 30,
             sort: {
                 create_time: "desc"
             }
