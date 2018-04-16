@@ -1,14 +1,53 @@
 import Controller from '../Controller';
 import bookService from '../services/bookService';
 import {controller, get, post} from '../mvc/helper';
-
+var filter = require('filter-object');
 var schema = require('async-validator');
+import _ from 'lodash';
 import Mock from 'mockjs';
 
 var _bookService = new bookService();
 export default class book extends Controller {
     @post()
     async addBook(req, res, next) {
+
+        var descriptor = {
+            cn_name: {type: "string", required: true},
+            en_name: {type: "string", required: true},
+            intro: {type: "string", required: true}
+        }
+
+        var body = Object.assign({}, req.body);
+        var validator = new schema(descriptor);
+
+        validator.validate(body, async (errors, fields) => {
+            if (errors) {
+                return this.handleErrors(res, errors, fields);
+            }
+
+            let model = {
+                ...filter(body, _.keys(descriptor)), //get descriptor properties
+
+            };
+
+            if (req.body._id) { //update
+                model._id = req.body._id;
+                model.last_update_time = new Date()
+            } else {
+                model.create_time = new Date();
+            }
+
+            var _id = await _bookService.addBook(model);
+            if (_id) {
+
+                this.success(_id);
+            }
+
+        });
+    }
+
+    @post()
+    async addBookO(req, res, next) {
         let model = Mock.mock({
             cn_name: "@cword(10)",//chinese name
             en_name: "@word(5)",//english name
@@ -35,10 +74,10 @@ export default class book extends Controller {
         }
     }
 
-    @get()
+    @get("/getBookById/:book_id")
     async getBookById(req, res, next) {
         // var rs = yield  _fragmentService.getAllFragments();
-        var rs = await  _bookService.getBookById();
+        var rs = await  _bookService.getBookMainInfoById(req.params.book_id);
         this.success(rs);
     }
 
@@ -71,11 +110,15 @@ export default class book extends Controller {
     }
 
 
-    @get('/getBooksOfPg/:page')
+    @get('/getBooksOfPg/:page/:limit')
     async getFragmentsOfPg(req, res, next) {
+        var limit = req.params.limit ? parseInt(req.params.limit) : 30;
+        if (limit > 30) {
+            this.success(null);
+        }
         var rs = await  _bookService.getBooksOfPg({}, {
             page: req.params.page,
-            limit: 30,
+            limit: limit,
             sort: {
                 create_time: "desc"
             }
