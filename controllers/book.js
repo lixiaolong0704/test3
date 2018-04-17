@@ -17,6 +17,7 @@ export default class book extends Controller {
             intro: {type: "string", required: true}
         }
 
+
         var body = Object.assign({}, req.body);
         var validator = new schema(descriptor);
 
@@ -27,7 +28,7 @@ export default class book extends Controller {
 
             let model = {
                 ...filter(body, _.keys(descriptor)), //get descriptor properties
-
+                chapters:req.body.chapters
             };
 
             if (req.body._id) { //update
@@ -42,6 +43,42 @@ export default class book extends Controller {
 
                 this.success(_id);
             }
+
+        });
+    }
+    @post()
+    async updateBook(req, res, next){
+        var descriptor = {
+            cn_name: {type: "string", required: true},
+            en_name: {type: "string", required: true},
+            intro: {type: "string", required: true}
+        }
+
+
+        var body = Object.assign({}, req.body);
+        var validator = new schema(descriptor);
+
+        validator.validate(body, async (errors, fields) => {
+            if (errors) {
+                return this.handleErrors(res, errors, fields);
+            }
+
+            let model = {
+                ...filter(body, _.keys(descriptor)), //get descriptor properties
+                chapters:req.body.chapters
+            };
+
+            if (req.body._id) { //update
+                model._id = req.body._id;
+                model.last_update_time = new Date()
+                var _id = await _bookService.updateBook(model);
+                if (_id) {
+                    this.success(_id);
+                }
+            }
+
+
+
 
         });
     }

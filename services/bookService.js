@@ -22,6 +22,30 @@ export default class bookService {
 
     }
 
+
+    updateBook(model) {
+
+
+        return new Promise((resolver) => {
+            Book.update({_id: model._id}, {
+                $set:{
+                    'cn_name':model.cn_name,
+                    'en_name':model.en_name,
+                    'intro':model.intro,
+                    'chapters':model.chapters
+                }
+
+            }, () => {
+                resolver(model._id);
+            })
+
+
+        })
+
+
+    }
+
+
     editRemark(model) {
 
         return new Promise((resolver) => {
