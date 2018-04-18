@@ -7,7 +7,6 @@
     "start": "node dist/index.js",
     "dev": "nodemon  bin/www --exec \"node -r dotenv/config -r babel-register\"",
     "debug": "node  debug.js --exec \"node -r dotenv/config -r babel-register\"",
-
     "log": "DEBUG=* nodemon  bin/www --exec \"node -r dotenv/config -r babel-register\"",
     "mondebug": "nodemon  debug.js    --exec \"node -r dotenv/config -r babel-register\"",
     "clean": "rimraf dist",
@@ -21,6 +20,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "body-parser": "~1.18.2",
+    "busboy": "^0.2.14",
     "co-express": "^2.0.0",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "~1.4.3",
@@ -36,7 +36,8 @@
     "morgan": "~1.9.0",
     "node-sass-middleware": "0.9.8",
     "rimraf": "^2.6.2",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.3",

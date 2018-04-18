@@ -1,0 +1,76 @@
+Auto-merging src/v2/vuex/mutation-types.js
+Auto-merging src/v2/vuex/account/actions.js
+CONFLICT (content): Merge conflict in src/v2/vuex/account/actions.js
+Removing src/v2/ui/src/pt-input-number.vue
+Auto-merging src/v2/ui/src/components/popup/pt-popup.vue
+Auto-merging src/v2/services/gtm.service.js
+CONFLICT (content): Merge conflict in src/v2/services/gtm.service.js
+Auto-merging src/v2/routes.js
+CONFLICT (content): Merge conflict in src/v2/routes.js
+Auto-merging src/v2/configs/roles.config.js
+Removing src/v2/components/widget-editor/setting-styles/items/yAxis.vue
+Removing src/v2/components/widget-editor/setting-styles/items/xAxis.vue
+Auto-merging src/v2/components/widget-editor/onboarding/video.vue
+CONFLICT (add/add): Merge conflict in src/v2/components/widget-editor/onboarding/video.vue
+Auto-merging src/v2/components/widget-editor/graph/graph.vue
+Auto-merging src/v2/components/widget-editor/fields/dragFields.vue
+CONFLICT (content): Merge conflict in src/v2/components/widget-editor/fields/dragFields.vue
+Auto-merging src/v2/components/widget-editor/editor-chart.vue
+CONFLICT (content): Merge conflict in src/v2/components/widget-editor/editor-chart.vue
+Auto-merging src/v2/components/widget-editor/datasource/datasource.vue
+CONFLICT (content): Merge conflict in src/v2/components/widget-editor/datasource/datasource.vue
+Auto-merging src/v2/components/widget-editor/datasource/choose-ds.vue
+CONFLICT (content): Merge conflict in src/v2/components/widget-editor/datasource/choose-ds.vue
+Auto-merging src/v2/components/styles/framework/_colors.scss
+CONFLICT (content): Merge conflict in src/v2/components/styles/framework/_colors.scss
+Auto-merging src/v2/components/main/main.vue
+CONFLICT (content): Merge conflict in src/v2/components/main/main.vue
+Auto-merging src/v2/components/main/main-header.vue
+CONFLICT (content): Merge conflict in src/v2/components/main/main-header.vue
+Auto-merging src/v2/components/main/main-content.vue
+CONFLICT (content): Merge conflict in src/v2/components/main/main-content.vue
+Auto-merging src/v2/components/dashboard/widget-list.vue
+CONFLICT (content): Merge conflict in src/v2/components/dashboard/widget-list.vue
+Auto-merging src/v2/components/dashboard/dashboard.vue
+CONFLICT (content): Merge conflict in src/v2/components/dashboard/dashboard.vue
+Auto-merging src/v2/components/dashboard/dashboard-auth.vue
+CONFLICT (content): Merge conflict in src/v2/components/dashboard/dashboard-auth.vue
+Auto-merging src/v2/components/charts/table/table.vue
+Auto-merging src/v2/assets/svg/pt-icons.svg
+CONFLICT (content): Merge conflict in src/v2/assets/svg/pt-icons.svg
+Auto-merging src/v2/assets/svg/pt-icons-demo.html
+CONFLICT (content): Merge conflict in src/v2/assets/svg/pt-icons-demo.html
+Auto-merging src/v2/assets/i18n/zh-CN.json
+CONFLICT (content): Merge conflict in src/v2/assets/i18n/zh-CN.json
+Auto-merging src/v2/assets/i18n/ja-JP.json
+CONFLICT (content): Merge conflict in src/v2/assets/i18n/ja-JP.json
+Auto-merging src/v2/assets/i18n/en-US.json
+CONFLICT (content): Merge conflict in src/v2/assets/i18n/en-US.json
+Auto-merging src/v2/apis/resourceWrapper.js
+CONFLICT (content): Merge conflict in src/v2/apis/resourceWrapper.js
+Auto-merging src/v2/apis/datasource.js
+CONFLICT (content): Merge conflict in src/v2/apis/datasource.js
+Auto-merging src/configs/const.config.js
+CONFLICT (content): Merge conflict in src/configs/const.config.js
+Auto-merging src/components/modules/dataSources/upload/upload.ctrl.js
+CONFLICT (content): Merge conflict in src/components/modules/dataSources/upload/upload.ctrl.js
+Auto-merging src/components/modules/dataSources/template/tmpAccount.directive.js
+Auto-merging src/components/modules/dataSources/gd/gd.ctrl.js
+CONFLICT (content): Merge conflict in src/components/modules/dataSources/gd/gd.ctrl.js
+Auto-merging src/components/modules/dataSources/dataSources.ctrl.js
+CONFLICT (content): Merge conflict in src/components/modules/dataSources/dataSources.ctrl.js
+Auto-merging src/assets/svg/pt-icons.svg
+CONFLICT (content): Merge conflict in src/assets/svg/pt-icons.svg
+Auto-merging src/assets/svg/pt-icons-demo.html
+CONFLICT (content): Merge conflict in src/assets/svg/pt-icons-demo.html
+Auto-merging src/assets/i18n/zh_CN.json
+Auto-merging src/assets/i18n/ja_JP.json
+Auto-merging src/assets/i18n/en_US.json
+Auto-merging package.json
+CONFLICT (content): Merge conflict in package.json
+Auto-merging package-lock.json
+Auto-merging env.config.js
+CONFLICT (content): Merge conflict in env.config.js
+Auto-merging .gitlab-ci.yml
+CONFLICT (content): Merge conflict in .gitlab-ci.yml
+Automatic merge failed; fix conflicts and then commit the result.

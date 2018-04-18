@@ -22,17 +22,51 @@ export default class bookService {
 
     }
 
+    addChapter(bookId, chapter) {
+        return new Promise((resolver) => {
+            Book.update(
+                {_id: bookId},
+                {$push: {chapters: chapter}},
+                (err) => {
 
+                    if(err){
+                        console.log(err);
+                    }
+
+                    resolver(chapter._id);
+
+                }
+            );
+
+        })
+    }
+
+    addP(bookId, p) {
+        return new Promise((resolver) => {
+            Book.update(
+                {_id: bookId},
+                {$push: {paragraphs: p}},
+                (err) => {
+                    if(err){
+                        console.log(err);
+                    }
+                    resolver(p._id);
+
+                }
+            );
+
+        })
+    }
     updateBook(model) {
 
 
         return new Promise((resolver) => {
             Book.update({_id: model._id}, {
-                $set:{
-                    'cn_name':model.cn_name,
-                    'en_name':model.en_name,
-                    'intro':model.intro,
-                    'chapters':model.chapters
+                $set: {
+                    'cn_name': model.cn_name,
+                    'en_name': model.en_name,
+                    'intro': model.intro,
+                    'chapters': model.chapters
                 }
 
             }, () => {

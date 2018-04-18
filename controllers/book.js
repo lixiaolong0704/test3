@@ -1,13 +1,106 @@
 import Controller from '../Controller';
 import bookService from '../services/bookService';
 import {controller, get, post} from '../mvc/helper';
+
 var filter = require('filter-object');
 var schema = require('async-validator');
 import _ from 'lodash';
 import Mock from 'mockjs';
 
+
+var Busboy = require('busboy');
+var path = require('path');
+var fs = require('fs');
+var os = require('os');
+var es = require('event-stream');
 var _bookService = new bookService();
+
+const $uploadBookPath = 'upload/books/';
+
+const uuidv1 = require('uuid/v1');
+
+
 export default class book extends Controller {
+
+    @post('/upload/:book_id')
+    async upload(req, res, next) {
+        var _t = this;
+        var busboy = new Busboy({headers: req.headers});
+        var saveTo = null;
+        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+            saveTo = path.join('.', $uploadBookPath + filename);
+            console.log('Uploading: ' + saveTo);
+            file.pipe(fs.createWriteStream(saveTo));
+        });
+
+        busboy.on('finish', function () {
+
+
+            var currentChapterId = null;
+            var s = fs.createReadStream(saveTo)
+                .pipe(es.split())
+                .pipe(es.mapSync(async function (line) {
+
+                        // pause the readstream
+                        s.pause();
+                        console.log('***********' + line);
+                        // /^####(.+)####$/.tes
+                        var chapterRegex = /^####(.+)####$/;
+
+                        if (chapterRegex.test(line)) {
+
+                            currentChapterId = (uuidv1()+'').replace(/-/g,'');
+                            await _bookService.addChapter(req.params.book_id, {
+                                title: line.replace(/^####(.+)####$/, "$1"),
+                                chapter_id: currentChapterId
+                            });
+
+                            s.resume();
+                        } else {
+                            await _bookService.addP(req.params.book_id, {
+                                en_content: line,
+                                chapter_id: currentChapterId
+                            });
+                            s.resume();
+
+                        }
+
+
+                        // resume the readstream, possibly from a callback
+
+                    })
+                        .on('error', function (err) {
+                            console.log('Error while reading file.', err);
+                        })
+                        .on('end', function () {
+                            console.log('Read entire file.')
+                            _t.success("ok");
+                        })
+                );
+            // fs.readFile(saveTo, 'utf8', function (err, data) {
+            //     if (err) {
+            //         console.log(err);
+            //     }
+            //     console.log('OK: ' + saveTo);
+            //     console.log(data)
+            //     console.log('Upload complete' + $uploadBookPath + req.params.book_id);
+            //     // res.writeHead(200, { 'Connection': 'close' });
+            //     // res.end("That's all folks!");
+            //
+            //
+            //
+            //
+            //
+            //     _t.success("ok");
+            // });
+            // _t.success("ok");
+
+        });
+        return req.pipe(busboy);
+
+
+    }
+
     @post()
     async addBook(req, res, next) {
 
@@ -28,7 +121,7 @@ export default class book extends Controller {
 
             let model = {
                 ...filter(body, _.keys(descriptor)), //get descriptor properties
-                chapters:req.body.chapters
+                chapters: req.body.chapters
             };
 
             if (req.body._id) { //update
@@ -46,8 +139,9 @@ export default class book extends Controller {
 
         });
     }
+
     @post()
-    async updateBook(req, res, next){
+    async updateBook(req, res, next) {
         var descriptor = {
             cn_name: {type: "string", required: true},
             en_name: {type: "string", required: true},
@@ -65,7 +159,7 @@ export default class book extends Controller {
 
             let model = {
                 ...filter(body, _.keys(descriptor)), //get descriptor properties
-                chapters:req.body.chapters
+                chapters: req.body.chapters
             };
 
             if (req.body._id) { //update
@@ -76,8 +170,6 @@ export default class book extends Controller {
                     this.success(_id);
                 }
             }
-
-
 
 
         });
