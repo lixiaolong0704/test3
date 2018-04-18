@@ -29,7 +29,7 @@ export default class bookService {
                 {$push: {chapters: chapter}},
                 (err) => {
 
-                    if(err){
+                    if (err) {
                         console.log(err);
                     }
 
@@ -47,7 +47,7 @@ export default class bookService {
                 {_id: bookId},
                 {$push: {paragraphs: p}},
                 (err) => {
-                    if(err){
+                    if (err) {
                         console.log(err);
                     }
                     resolver(p._id);
@@ -57,6 +57,7 @@ export default class bookService {
 
         })
     }
+
     updateBook(model) {
 
 
@@ -205,6 +206,41 @@ export default class bookService {
 
                     r(results[0]);
                 });
+            // Fragment.find({}, (err, results) => {
+            //     r(results);
+            // })
+        })
+    }
+
+    getBookParagraphsOfPg({book_id, start, size, condition}) {
+
+
+        var find = {_id: book_id};
+
+        if (condition) {
+            // find.paragraphs = {
+            //     $elemMatch: {en_content: {
+            //         '$regex' : condition, '$options' : 'i'
+            //     }}
+            // }
+            // find.en_name
+
+        }
+        return new Promise((r) => {
+            Book.findOne(find).select({
+                chapters: 0,
+                paragraphs: {
+                    $elemMatch: {
+                        en_content: {
+                            '$regex': condition, '$options': 'i'
+                        }
+                    },
+                    $slice: [start, size]
+                }
+            }).exec((err, results) => {
+
+                r(results);
+            })
             // Fragment.find({}, (err, results) => {
             //     r(results);
             // })

@@ -238,6 +238,18 @@ export default class book extends Controller {
         this.success(rs);
     }
 
+    @get("/getBookParagraphsOfPg/:book_id/:pageNumber/:condition?")
+    async getBookParagraphsOfPg(req) {
+        var rs = await  _bookService.getBookParagraphsOfPg({
+            // book_id: "5a5863be1381c8180ff12c3c",
+            book_id: req.params.book_id,
+            start: (req.params.pageNumber - 1) * this.paragraphBatchSize,
+            size: this.paragraphBatchSize,
+            condition:req.params.condition
+
+        });
+        this.success(rs);
+    }
 
     @get('/getBooksOfPg/:page/:limit')
     async getFragmentsOfPg(req, res, next) {
