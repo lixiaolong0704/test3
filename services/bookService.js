@@ -215,29 +215,35 @@ export default class bookService {
     getBookParagraphsOfPg({book_id, start, size, condition}) {
 
 
-        var find = {_id: book_id};
+        var find = {_id: '5a52dfcd694dad1b7ce8917c'};
 
         if (condition) {
-            // find.paragraphs = {
-            //     $elemMatch: {en_content: {
-            //         '$regex' : condition, '$options' : 'i'
-            //     }}
+            // find['chapters.$._id'] =  condition;
+            // find['paragraphs.en_content'] = {
+            //     '$regex' : 'Fjzybuccen',
+            //     '$options' : 'i'
             // }
             // find.en_name
 
         }
+        console.log(find);
         return new Promise((r) => {
-            Book.findOne(find).select({
-                chapters: 0,
-                paragraphs: {
-                    $elemMatch: {
-                        en_content: {
-                            '$regex': condition, '$options': 'i'
+            Book.findOne({_id: "5a52dfcd694dad1b7ce8917c"}
+            ).select(
+                {
+                    chapters: {
+                        $elemMatch: {
+                            title: {'$regex': 'Fjzybuccen', '$options': 'i'}
                         }
-                    },
-                    $slice: [start, size]
-                }
-            }).exec((err, results) => {
+                    }
+                }).// select({
+            //     chapters: 0,
+            //     paragraphs: {
+            //         $slice: [start, size]
+            //     }
+
+            // }).
+            exec((err, results) => {
 
                 r(results);
             })
@@ -246,6 +252,42 @@ export default class bookService {
             // })
         })
     }
+
+    //
+    // getBookParagraphsOfPg({book_id, start, size, condition}) {
+    //
+    //
+    //     var find = {_id: '5a52dfcd694dad1b7ce8917c'};
+    //
+    //     if (condition) {
+    //         // find['chapters.$._id'] =  condition;
+    //         // find['paragraphs.en_content'] = {
+    //         //     '$regex' : condition,
+    //         //     '$options' : 'i'
+    //         // }
+    //         // find.en_name
+    //
+    //     }
+    //     console.log(find);
+    //     return new Promise((r) => {
+    //         Book.findOne(   { _id: "5a52dfcd694dad1b7ce8917c"}
+    //               ).
+    //         select( { chapters: { $elemMatch: { title:'Fjzybuccen Dajoucsv Wrimdffdh Thbjtunq Sncigjv Fxzgktmvv Udwwlv Stbj Evii'  } }}).
+    //         // select({
+    //         //     chapters: 0,
+    //         //     paragraphs: {
+    //         //         $slice: [start, size]
+    //         //     }
+    //         // }).
+    //         exec((err, results) => {
+    //
+    //             r(results);
+    //         })
+    //         // Fragment.find({}, (err, results) => {
+    //         //     r(results);
+    //         // })
+    //     })
+    // }
 
 
     getBookParagraphsByIndex({book_id, start, size}) {

@@ -1,0 +1,96 @@
+//db.book.find({_id:ObjectId("5a52dfcd694dad1b7ce8917c"),})
+
+//db.book.aggregate([
+//   { $project: {_id:ObjectId("5a52dfcd694dad1b7ce8917c"), ntest: { $slice: [ "$chapters", 3 ] } } }
+//])
+//
+//
+//db.book.aggregate([
+//   { $project: {_id:ObjectId("5a52dfcd694dad1b7ce8917c"), '$chapters.title':1 } }
+//])
+db.book.find(
+   { _id:ObjectId("5a52dfcd694dad1b7ce8917c") }
+)
+db.book.find(
+   { _id:ObjectId("5a52dfcd694dad1b7ce8917c")},
+   { chapters: { $elemMatch: { title:'Fjzybuccen Dajoucsv Wrimdffdh Thbjtunq Sncigjv Fxzgktmvv Udwwlv Stbj Evii'  } } }
+)
+
+
+db.book.aggregate([{
+        $match: {
+            _id: ObjectId("5a52dfcd694dad1b7ce8917c")
+        }
+    },
+//       { $unwind: '$chapters'},
+    {
+        $match: {
+            'chapters.title':{'$regex': 'Fjzybuccen', '$options': 'i'}
+        }
+    },
+    { $limit: 2 }
+])
+
+db.book.aggregate([
+    { $match: {_id: ObjectId("5a52dfcd694dad1b7ce8917c")}},
+    { $project: {
+        chapters: {$filter: {
+            input: '$chapters',
+            as: 'item',
+            cond: {
+              $and: ["$$item.title",{'$regex': 'Fjzybuccen', '$options': 'i'}]
+
+            }
+        }}
+    }}
+])
+db.book.aggregate([
+    { $match: {_id: ObjectId("5a52dfcd694dad1b7ce8917c")}},
+    { $project: {
+        chapters: {$filter: {
+            input: '$chapters',
+            as: 'item',
+            cond: {
+
+     			'$eq': [	  "$$item.title",'Fjzybuccen Dajoucsv Wrimdffdh Thbjtunq Sncigjv Fxzgktmvv Udwwlv Stbj Evii']
+
+
+
+            }
+        }}
+    }}
+])
+
+db.book.aggregate([
+    { $match: {_id: ObjectId("5a52dfcd694dad1b7ce8917c")}},
+    { $project: {
+        chapters: {$filter: {
+            input: '$chapters',
+            as: 'item',
+            cond: {
+
+     			'$eq': [	  "$$item.title",'Fjzybuccen Dajoucsv Wrimdffdh Thbjtunq Sncigjv Fxzgktmvv Udwwlv Stbj Evii']
+
+
+
+            }
+        }}
+    }}
+])
+
+db.book.aggregate([
+    { $match: {_id: ObjectId("5a52dfcd694dad1b7ce8917c")}},
+    { $project: {
+        chapters: {$filter: {
+            input: '$chapters',
+            as: 'item',
+            cond: {
+              $eq: ["$$item.title",{'$regex': 'Fjzybuccen', '$options': 'i'}]
+
+            }
+        }}
+    }}
+])
+
+
+https://stackoverflow.com/questions/30221039/is-it-possible-to-write-regular-expression-in-cond-in-mongodb
