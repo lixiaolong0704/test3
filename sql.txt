@@ -85,12 +85,39 @@ db.book.aggregate([
             input: '$chapters',
             as: 'item',
             cond: {
-              $eq: ["$$item.title",{'$regex': 'Fjzybuccen', '$options': 'i'}]
+              '$in': ['F',"$$item.title"]
 
             }
         }}
     }}
 ])
 
+//ok version
+//$slice:['$chapters',  2]
+db.book.aggregate(
+    { $match: {_id: ObjectId("5a52dfcd694dad1b7ce8917c")}},
+    { $unwind: '$chapters'},
+    { $match: {'chapters.title':  {'$regex': 'F', '$options': 'i'}  }},
 
-https://stackoverflow.com/questions/30221039/is-it-possible-to-write-regular-expression-in-cond-in-mongodb
+    { $group: {_id: '$_id', list: {$push: '$chapters'},
+
+      }})
+//***********
+
+//very good ...
+db.book.aggregate([
+    { $match: {_id: ObjectId("5a52dfcd694dad1b7ce8917c")}},
+    { $unwind: '$chapters'},
+    { $match: {'chapters.title':  {'$regex': 'F', '$options': 'i'}  }},
+
+    { $group: {_id: '$_id', list: {$push: '$chapters' } } },
+    {$project: { _id:1 ,aa: { $slice: ['$list',2,2] }   }  }
+
+    ])
+
+
+
+
+
+
+//https://stackoverflow.com/questions/30221039/is-it-possible-to-write-regular-expression-in-cond-in-mongodb

@@ -215,6 +215,35 @@ export default class bookService {
     getBookParagraphsOfPg({book_id, start, size, condition}) {
 
 
+        const ifCondition = () => {
+            if (condition) {
+                return [
+                    {$unwind: '$paragraphs'},
+                    {$match: {'paragraphs.en_content': {'$regex': condition, '$options': 'i'}}},
+                    {$group: {_id: '$_id', paragraphs: {$push: '$paragraphs'}}},
+                ]
+            } else {
+                return [];
+
+            }
+        }
+        return new Promise((r) => {
+            Book.aggregate(
+                [
+                    {$match: {_id: mongoose.Types.ObjectId(book_id)}},
+                    ...ifCondition(),
+                    {$project: {paragraphs: {$slice: ['$paragraphs', start, size]}}}
+
+                ]).exec((err, results) => {
+                r(results);
+            });
+        });
+
+    }
+
+    getBookParagraphsOfPgabc({book_id, start, size, condition}) {
+
+
         var find = {_id: '5a52dfcd694dad1b7ce8917c'};
 
         if (condition) {
@@ -228,25 +257,19 @@ export default class bookService {
         }
         console.log(find);
         return new Promise((r) => {
-            Book.findOne({_id: "5a52dfcd694dad1b7ce8917c"}
-            ).select(
-                {
-                    chapters: {
-                        $elemMatch: {
-                            title: {'$regex': 'Fjzybuccen', '$options': 'i'}
-                        }
-                    }
-                }).// select({
-            //     chapters: 0,
-            //     paragraphs: {
-            //         $slice: [start, size]
-            //     }
+            Book.aggregate(
+                [{$match: {_id: mongoose.Types.ObjectId("5a52dfcd694dad1b7ce8917c")}},
+                    {$unwind: '$chapters'},
+                    {$match: {'chapters.title': {'$regex': 'F', '$options': 'i'}}},
 
-            // }).
-            exec((err, results) => {
+                    {$group: {_id: '$_id', list: {$push: '$chapters'}}},
+                    {$project: {_id: 1, aa: {$slice: ['$list', 2, 2]}}}
+
+                ]).exec((err, results) => {
 
                 r(results);
-            })
+            });
+
             // Fragment.find({}, (err, results) => {
             //     r(results);
             // })
