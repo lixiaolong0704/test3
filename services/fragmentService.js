@@ -50,10 +50,10 @@ export default class fragmentService {
         })
 
     }
-    getFragmentsOfPg(pgConfig){
+    getFragmentsOfPg(condition,pgConfig){
 
         return new Promise((r) => {
-            Fragment.paginate({}, pgConfig, function(err, result) {
+            Fragment.paginate(condition, pgConfig, function(err, result) {
                 // result.docs
                 // result.total
                 // result.limit - 10

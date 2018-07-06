@@ -5,7 +5,8 @@ var schema = new mongoose.Schema({
     name: String,
     ref_link:String,
     ref_content:String,
-    create_time:Date
+    create_time:Date,
+    uid:String
 })
 schema.plugin(mongoosePaginate);
 var Fragment = mongoose.model('fragment', schema);

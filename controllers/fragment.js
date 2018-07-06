@@ -2,18 +2,21 @@
 
 import Controller from '../Controller';
 import {controller, get, post} from '../mvc/helper';
+import fragmentService from '../services/fragmentService';
 
+var _fragmentService = new fragmentService();
 export default class fragment extends Controller{
 
     @post()
-    addFragment(req, res, next){
+     async addFragment(req, res, next){
         let model = {
             name: req.body.name,
             ref_link: req.body.ref_link,
             ref_content: req.body.ref_content,
             create_time: new Date(),
+            uid:req.session.userinfo._id
         }
-        var _id = yield _fragmentService.addFragment(model);
+        var _id = await _fragmentService.addFragment(model);
         if (_id) {
             res.json({
                 code: 1,
@@ -23,7 +26,7 @@ export default class fragment extends Controller{
         }
     }
     @get()
-    test(req, res, next){
+    async test(req, res, next){
 
         for (let i = 0; i < 1000000000000; i++) {
             let model = {
@@ -33,7 +36,7 @@ export default class fragment extends Controller{
                 create_time: new Date(),
             }
             // console.log(i);
-            yield _fragmentService.addFragment(model);
+            await _fragmentService.addFragment(model);
         }
         res.json({
             code: 1,
@@ -42,14 +45,15 @@ export default class fragment extends Controller{
 
     }
     @post()
-    updateFragment(req, res, next){
+    async updateFragment(req, res, next){
         let model = {
             _id: req.body._id,
             name: req.body.name,
             ref_link: req.body.ref_link,
-            ref_content: req.body.ref_content
+            ref_content: req.body.ref_content,
+            uid:req.session.userinfo._id
         }
-        var isOk = yield _fragmentService.updateFragment(model);
+        var isOk = await _fragmentService.updateFragment(model);
         if (isOk) {
             res.json({
                 code: 1,
@@ -60,16 +64,18 @@ export default class fragment extends Controller{
     }
 
     @get()
-    getAllFragments(req, res, next){
-        var rs = yield  _fragmentService.getAllFragments();
+    async getAllFragments(req, res, next){
+        var rs = await  _fragmentService.getAllFragments();
         res.json({
             code: 1,
             data: rs
         });
     }
     @get('/getFragmentsOfPg/:page')
-    getFragmentsOfPg(req, res, next){
-        var rs = yield  _fragmentService.getFragmentsOfPg({page: req.params.page, limit: 5});
+    async getFragmentsOfPg(req, res, next){
+        var rs = await _fragmentService.getFragmentsOfPg({
+            uid:req.session.userinfo._id
+        },{page: req.params.page, limit: 5});
         res.json({
             code: 1,
             data: rs

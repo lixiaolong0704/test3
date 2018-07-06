@@ -10,6 +10,8 @@ import userCtl from './controllers/user';
 import bookCtl from './controllers/book';
 import remarkCtl from './controllers/remark';
 import readlogCtl from './controllers/readlog';
+
+import fragmentCtl from './controllers/fragment';
 export default function init(app) {
 
 
@@ -63,7 +65,7 @@ export default function init(app) {
     setUp(bookCtl);
     setUp(remarkCtl);
     setUp(readlogCtl);
-
+    setUp(fragmentCtl);
 
 
 }
