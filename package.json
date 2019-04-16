@@ -10,7 +10,7 @@
     "log": "DEBUG=* nodemon  bin/www --exec \"node -r dotenv/config -r babel-register\"",
     "mondebug": "nodemon  debug.js    --exec \"node -r dotenv/config -r babel-register\"",
     "clean": "rimraf dist",
-    "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
+    "build": "npm run clean && mkdir -p dist && babel ./bin/www -s -D -d dist",
     "test": "jest --watch",
     "lint": "esw -w src test"
   },
@@ -35,7 +35,6 @@
     "mongoose-paginate": "^5.0.3",
     "morgan": "~1.9.0",
     "node-sass-middleware": "0.9.8",
-    "rimraf": "^2.6.2",
     "serve-favicon": "~2.4.5",
     "uuid": "^3.2.1"
   },
@@ -58,6 +57,7 @@
     "jest": "^21.2.1",
     "mockjs": "^1.0.1-beta3",
     "nodemon": "^1.12.1",
+    "rimraf": "^2.6.2",
     "supertest": "^3.0.0"
   },
   "babel": {
